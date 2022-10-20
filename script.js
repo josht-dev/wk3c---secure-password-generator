@@ -24,6 +24,13 @@ and validates that the minimum acceptable was selected*/
 const generatePassword = () => {
   // local scope variables used in this function
   let pwLength = 0;
+  let numCharTypes = 0;
+  const pwCharTypes = {
+    pwLowercase: false,
+    pwUppercase: false,
+    pwNumeric: false,
+    pwSpecialChar: false
+  }
 
   // Loop to prompt and validate user input on password length
   while (pwLength < 8) {
@@ -40,7 +47,23 @@ const generatePassword = () => {
     }
   };
 
+  // Loop through character types user selections until at least one type is chosen
+  do {
+    // Use the alert() method to warn the user that 1 of the next 4 prompts must be ok'd
+    alert("Warning! The user must select at least one of the next four prompts.");
+    // Use the confirm() method to prompt the user to confirm the character types to use
+    pwCharTypes.pwLowercase = confirm("Should the password use lowercase characters?");
+    pwCharTypes.pwUppercase = confirm("Should the password use uppercase characters?");
+    pwCharTypes.pwNumeric = confirm("Should the password use numeric characters?");
+    pwCharTypes.pwSpecialChar = confirm("Should the password use special characters?");
 
+    // Loop through pwCharTypes obj checking if the user confirmed any character types to use
+    for (let x in pwCharTypes) {
+      if (pwCharTypes[x]) {
+        numCharTypes++;
+      }
+    }
+  } while (numCharTypes < 1);
 
 
 
@@ -48,10 +71,6 @@ const generatePassword = () => {
   return "password-here" // TO DO - add completed password
 }
 
-// TO DO - Validate input is acceptable by security criteria
-// TO DO - Use the alert() method to inform the user of invalid input
-
-// TO DO - Use the confirm() method to prompt the user to confirm the character types to use
 
 // TO DO - Take user selected criteria to build a possible character array
 
