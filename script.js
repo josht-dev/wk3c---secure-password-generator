@@ -22,62 +22,89 @@ THEN the password is either displayed in an alert or written to the page
 and validates that the minimum acceptable was selected*/
 
 const generatePassword = () => {
-  // local scope variables used in this function
-  let pwLength = 0;
+  // local scope variables and obj used in this function
   let numCharTypes = 0;
-  const pwCharTypes = {
-    pwLowercase: false,
-    pwUppercase: false,
-    pwNumeric: false,
-    pwSpecialChar: false
+  const rulePatternArr = [];
+  const pwRules = {
+    pwLength: 0,
+    pwLowercase: false, // dec# 97-122
+    pwUppercase: false, // dec# 65-90
+    pwNumeric: false, // dec# 48-57
+    pwSpecialChar: false // dec# 32-47, 58-64, 91-96, 123-126
   }
 
   // Loop to prompt and validate user input on password length
-  while (pwLength < 8) {
+  while (pwRules.pwLength < 8) {
     // Use prompt() method to get user input on the length of the password
-    pwLength = prompt("Please enter the password length. It must be between 8 and 128 characters long.", 8);
+    pwRules.pwLength = prompt("Please enter the password length. It must be between 8 and 128 characters long.", 8);
     // convert pwLength from type string to number
-    pwLength = Number(pwLength)
+    pwRules.pwLength = Number(pwRules.pwLength)
 
     // Validate input is acceptable by security criteria
-    if (isNaN(pwLength) || pwLength < 8) {
+    if (isNaN(pwRules.pwLength) || pwRules.pwLength < 8) {
       //Use the alert() method to inform the user of invalid input
       alert("ERROR! Invalid password length. A number of 8 or higher must be entered.");
-      pwLength = 0;
+      pwRules.pwLength = 0;
     }
-  };
+  }
 
   // Loop through character types user selections until at least one type is chosen
   do {
     // Use the alert() method to warn the user that 1 of the next 4 prompts must be ok'd
     alert("Warning! The user must select at least one of the next four prompts.");
     // Use the confirm() method to prompt the user to confirm the character types to use
-    pwCharTypes.pwLowercase = confirm("Should the password use lowercase characters?");
-    pwCharTypes.pwUppercase = confirm("Should the password use uppercase characters?");
-    pwCharTypes.pwNumeric = confirm("Should the password use numeric characters?");
-    pwCharTypes.pwSpecialChar = confirm("Should the password use special characters?");
+    pwRules.pwLowercase = confirm("Should the password use lowercase characters?");
+    pwRules.pwUppercase = confirm("Should the password use uppercase characters?");
+    pwRules.pwNumeric = confirm("Should the password use numeric characters?");
+    pwRules.pwSpecialChar = confirm("Should the password use special characters?");
 
-    // Loop through pwCharTypes obj checking if the user confirmed any character types to use
-    for (let x in pwCharTypes) {
-      if (pwCharTypes[x]) {
+    // Loop through pwRules obj checking if the user confirmed any character types to use
+    for (let x in pwRules) {
+      if (pwRules[x] && x != "pwLength") {
         numCharTypes++;
       }
     }
   } while (numCharTypes < 1);
 
-
+  // Build the pw criteria pattern as an array of numbers
+  for (let x in pwRules) {
+    switch (x) {
+      case "pwLowercase":
+        if (pwRules[x]) {
+          rulePatternArr.push(97, 122);
+        }
+        break;
+      case "pwUppercase":
+        if (pwRules[x]) {
+          rulePatternArr.push(65, 90);
+        }
+        break;
+      case "pwNumeric":
+        if (pwRules[x]) {
+          rulePatternArr.push(48, 57);
+        }
+        break;
+      case "pwSpecialChar":
+        if (pwRules[x]) {
+          rulePatternArr.push(32, 47, 58, 64, 91, 96, 123, 126);
+        }
+        break;
+      default:
+        break;
+    }
+  }
+  // Sort the array of numbers
+  rulePatternArr.sort(function(a, b) {return a-b});
 
 
   return "password-here" // TO DO - add completed password
 }
 
-
-// TO DO - Take user selected criteria to build a possible character array
-
 // TO DO - Use the Math.random() method to determine characters used in the password
 
 /* TO DO - Validate that at least 1 of each of the user selected character types is used
 otherwise, regenerate the password before returning it*/
+// TO DO - I can use a RegExp pattern and the test() method to validate
 
 // Get references to the #generate element
 var generateBtn = document.querySelector("#generate");
