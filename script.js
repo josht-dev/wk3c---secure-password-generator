@@ -36,6 +36,7 @@ const generatePassword = () => {
     pwNumeric: false, // dec# 48-57
     pwSpecialChar: false // dec# 32-47, 58-64, 91-96, 123-126
   }
+  const pwRulesValidated = {}
 
   // Loop to prompt and validate user input on password length
   while (pwRules.pwLength < 8) {
@@ -69,6 +70,9 @@ const generatePassword = () => {
       }
     }
   } while (numCharTypes < 1);
+
+  console.log(`Validate pwRules obj: `);
+  console.log(pwRules);
 
   // Build the pw criteria pattern as an array of numbers
   for (let x in pwRules) {
@@ -114,17 +118,20 @@ const generatePassword = () => {
     // Loop that generates a random number and checks it against the rulePatternArr
     do {
       // generate a random number between 32 and 126 depending on user selected rules
-      pwCharNums[index] = Math.floor((Math.random() * (maxValidCharNum - minValidCharNum)) + minValidCharNum);
+      /*pwCharNums[index]*/val = Math.floor((Math.random() * (maxValidCharNum - minValidCharNum)) + minValidCharNum);
+      //val = pwCharNums[index];
+      pwCharNums[index] = val;
 
       /* Validate the random number with the rulePatternArr variable/array 
       incase the char dec code has gaps between character groups*/
-      console.log(`rand num: ${pwCharNums[index]}`);
+      //console.log(`rand num: ${pwCharNums[index]}`);
+      console.log(`log val: ${val}`);
       for (let i = 0; i < rulePatternArr.length; i += 2) {
         console.log(`rule loop index: ${i}`);
-        if (pwCharNums[index] >= rulePatternArr[i] && pwCharNums[index] <= rulePatternArr[i+1]) {
+        if (/*pwCharNums[index]*/val >= rulePatternArr[i] && /*pwCharNums[index]*/val <= rulePatternArr[i+1]) {
           validNum = true;
         }
-        console.log(`new num: ${pwCharNums[index]}`);
+        console.log(`new num: ${val}`);
       }
       console.log(`valid num boolean: ${validNum}`);
       //validNum = true;
@@ -134,21 +141,67 @@ const generatePassword = () => {
 
   console.log(pwCharNums);
 
-  // Convert the pwCharNums array decimal codes to their basic latin characters
   
+  // validate at least 1 of each user criteria is used
+  for (let x in pwRules) {
+    switch (x) {
+      case "pwLowercase":
+        if (pwRules[x]) {
+          // If rule is true, check for at least 1 use of it in new password
+          pwRulesValidated[x] = pwCharNums.some((val, index) => {return val >= 97 && val <= 122;});
+          console.log(`validate ${x}: ${pwRulesValidated[x]}`);
+        }
+        break;
+      case "pwUppercase":
+        if (pwRules[x]) {
+          // If rule is true, check for at least 1 use of it in new password
+          pwRulesValidated[x] = pwCharNums.some((val, index) => {return val >= 65 && val <= 90;});
+          console.log(`validate ${x}: ${pwRulesValidated[x]}`);
+        }
+        break;
+      case "pwNumeric":
+        if (pwRules[x]) {
+          // If rule is true, check for at least 1 use of it in new password
+          pwRulesValidated[x] = pwCharNums.some((val, index) => {return val >= 48 && val <= 57;});
+          console.log(`validate ${x}: ${pwRulesValidated[x]}`);
+        }
+        break;
+      case "pwSpecialChar":
+        if (pwRules[x]) {
+          // If rule is true, check for at least 1 use of it in new password
+          pwRulesValidated[x] = pwCharNums.some((val, index) => {
+            return (val >= 32 && val <= 47) || (val >= 58 && val <= 64) || 
+            (val >= 91 && val <= 96) || (val >= 123 && val <= 126);
+          });
+          console.log(`validate ${x}: ${pwRulesValidated[x]}`);
+        }
+        break;
+      default:
+        break;
+    }
+  }
+
+  console.log('validate pwrulesvalidated: ');
+  console.log(pwRulesValidated);
+
+  for (let x in pwRulesValidated) {
+    if (!pwRulesValidated[x]) {
+      console.log(`validated rule as false; ${x}`);
+    }
+  }
+
+  // Convert the pwCharNums array decimal codes to their basic latin characters
   pwCharNums.forEach((val, index) => {
-    newPassword += String.fromCharCode(pwCharNums[index]);
+    newPassword += String.fromCharCode(val);
     console.log(`val = ${val}`);
     console.log(`value = ${newPassword}`);
   });
-  
+
 
   console.log(newPassword);
 
   return newPassword; // TO DO - add completed password
 }
-
-// TO DO - I can use a RegExp pattern and the test() method to validate
 
 // Get references to the #generate element
 var generateBtn = document.querySelector("#generate");
