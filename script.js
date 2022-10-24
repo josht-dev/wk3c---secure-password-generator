@@ -45,16 +45,16 @@ const generatePassword = () => {
 
 
   // Loop to prompt and validate user input on password length
-  while (pwRules.pwLength < 8) {
+  while (pwRules.pwLength < 8 || pwRules.pwLength > 128) {
     // Use prompt() method to get user input on the length of the password
     pwRules.pwLength = prompt("Please enter the password length. It must be between 8 and 128 characters long.", 8);
     // convert pwLength from type string to number
     pwRules.pwLength = Number(pwRules.pwLength)
 
     // Validate input is acceptable by security criteria
-    if (isNaN(pwRules.pwLength) || pwRules.pwLength < 8) {
+    if (isNaN(pwRules.pwLength) || pwRules.pwLength < 8 || pwRules.pwLength > 128) {
       //Use the alert() method to inform the user of invalid input
-      alert("ERROR! Invalid password length. A number of 8 or higher must be entered.");
+      alert("ERROR! Invalid password length. A number of 8 to 128 characters must be entered.");
       pwRules.pwLength = 0;
     }
   }
