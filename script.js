@@ -24,7 +24,11 @@ and validates that the minimum acceptable was selected*/
 const generatePassword = () => {
   // local scope variables and obj used in this function
   let numCharTypes = 0;
+  let newPassword = "";
+  let pwCharNums = [];
   const rulePatternArr = [];
+  let minValidCharNum = 0;
+  let maxValidCharNum = 0;
   const pwRules = {
     pwLength: 0,
     pwLowercase: false, // dec# 97-122
@@ -93,9 +97,45 @@ const generatePassword = () => {
         break;
     }
   }
-  // Sort the array of numbers
+  // Sort the array of numbers and grab the lowest and highest from the array
   rulePatternArr.sort(function(a, b) {return a-b});
+  minValidCharNum = rulePatternArr[0];
+  maxValidCharNum = rulePatternArr[rulePatternArr.length -1];
+  console.log(`min rule val = ${minValidCharNum}; max rule val = ${maxValidCharNum}`);
 
+  // Create default array for the password length
+  pwCharNums = new Uint8Array(pwRules.pwLength);
+
+  // Loop through array assigning random numbers to each index
+  pwCharNums.forEach((val, index) => {
+    let validNum = false;
+    console.log(`charnum arr index: ${index}`)
+    // Loop that generates a random number and checks it against the rulePatternArr
+    do {
+      // generate a random number between 32 and 126 depending on user selected rules
+      pwCharNums[index] = Math.floor((Math.random() * (maxValidCharNum - minValidCharNum)) + minValidCharNum);
+
+      /* Validate the random number with the rulePatternArr variable/array 
+      incase the char dec code has gaps between character groups*/
+      console.log(`rand num: ${pwCharNums[index]}`);
+      for (let i = 0; i < rulePatternArr.length; i += 2) {
+        console.log(`rule loop index: ${i}`);
+        if (pwCharNums[index] >= rulePatternArr[i] && pwCharNums[index] <= rulePatternArr[i+1]) {
+          validNum = true;
+        }
+        console.log(`new num: ${pwCharNums[index]}`);
+      }
+      console.log(`valid num boolean: ${validNum}`);
+      //validNum = true;
+      
+    } while (!validNum);
+
+    
+
+
+  });
+
+  console.log(pwCharNums);
 
   return "password-here" // TO DO - add completed password
 }
