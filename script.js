@@ -103,8 +103,9 @@ const generatePassword = () => {
   maxValidCharNum = rulePatternArr[rulePatternArr.length -1];
   console.log(`min rule val = ${minValidCharNum}; max rule val = ${maxValidCharNum}`);
 
-  // Create default array for the password length
-  pwCharNums = new Uint8Array(pwRules.pwLength);
+  // Create default array for the password length and pre-fill with 0
+  pwCharNums = Array(pwRules.pwLength);
+  pwCharNums.fill(0);
 
   // Loop through array assigning random numbers to each index
   pwCharNums.forEach((val, index) => {
@@ -129,21 +130,24 @@ const generatePassword = () => {
       //validNum = true;
       
     } while (!validNum);
-
-    
-
-
   });
 
   console.log(pwCharNums);
 
-  return "password-here" // TO DO - add completed password
+  // Convert the pwCharNums array decimal codes to their basic latin characters
+  
+  pwCharNums.forEach((val, index) => {
+    newPassword += String.fromCharCode(pwCharNums[index]);
+    console.log(`val = ${val}`);
+    console.log(`value = ${newPassword}`);
+  });
+  
+
+  console.log(newPassword);
+
+  return newPassword; // TO DO - add completed password
 }
 
-// TO DO - Use the Math.random() method to determine characters used in the password
-
-/* TO DO - Validate that at least 1 of each of the user selected character types is used
-otherwise, regenerate the password before returning it*/
 // TO DO - I can use a RegExp pattern and the test() method to validate
 
 // Get references to the #generate element
