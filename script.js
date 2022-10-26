@@ -29,7 +29,7 @@ const generatePassword = () => {
       // Loop that generates a random number and checks it against the rulePatternArr
       do {
         // generate a random number between 32 and 126 depending on user selected rules
-        val = Math.floor((Math.random() * (maxValidCharNum - minValidCharNum)) + minValidCharNum);
+        val = Math.floor((Math.random() * (maxValidCharNum - minValidCharNum + 1)) + minValidCharNum);
         pwCharNums[index] = val;
 
         /* Validate the random number with the rulePatternArr variable/array 
